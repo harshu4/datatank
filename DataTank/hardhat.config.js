@@ -11,8 +11,8 @@ module.exports = {
     defaultNetwork: "wallaby",
     networks: {
         wallaby: {
-            chainId: 31415,
-            url: "https://api.zondax.ch/fil/node/wallaby/rpc/v0",
+            chainId: 3141,
+            url: "https://api.hyperspace.node.glif.io/rpc/v1",
             accounts: [PRIVATE_KEY],
         },
     },

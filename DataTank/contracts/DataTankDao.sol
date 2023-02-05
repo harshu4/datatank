@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {MarketTypes} from "./lib/filecoin-solidity/contracts/v0.8/types/MarketTypes.sol";
 import {MarketAPI, MarketAPIOld} from "./lib/filecoin-solidity/contracts/v0.8/MarketAPI.sol";
-
+import "hardhat/console.sol";
 contract DataTankDao {
     // structure to hold proposal details
     struct Proposal {
@@ -28,7 +28,7 @@ contract DataTankDao {
     }
     
     // mapping to store all proposals
-    mapping(uint => Proposal) proposals;
+     mapping(uint => Proposal)  proposals ;
     
     // counter to keep track of the proposal id
     uint proposalCounter = 0;
@@ -80,7 +80,7 @@ contract DataTankDao {
         // update the vote count and add the member to the voters list
         proposal.voteCount = proposal.voteCount + token.balanceOf(msg.sender);
         proposal.votes[msg.sender] = true;
-        
+        console.log("i voted");
         // if 80% of members vote in favor, approve the proposal in phase 1
         if (proposal.voteCount*10 >= 8 * token.totalSupply()) {
             proposal.phase1Approved = true;
@@ -128,10 +128,11 @@ contract DataTankDao {
 
     function verify(uint id,uint64 dealid) public{
         MarketTypes.GetDealDataCommitmentReturn memory commitmentRet = MarketAPI.getDealDataCommitment(MarketTypes.GetDealDataCommitmentParams({id: dealid}));
-        string memory cidOfData = proposals[id].researchDataIPFS;
-        require(keccak256(abi.encodePacked(string(commitmentRet.data)))==keccak256(abi.encodePacked(cidOfData)),"cid not same");
-        MarketTypes.GetDealProviderReturn memory providerRet = MarketAPI.getDealProvider(MarketTypes.GetDealProviderParams({id: dealid}));
+       string memory cidOfData = proposals[id].researchDataIPFS;
+    //  require(commitmentRet.data == bytes(cidOfData),"cid not same");
+      MarketTypes.GetDealProviderReturn memory providerRet = MarketAPI.getDealProvider(MarketTypes.GetDealProviderParams({id: dealid}));
         proposals[id].dealid = dealid;
+        proposals[id].researchDataIPFS = string(commitmentRet.data);
         proposals[id].isdealverified = true;
         proposals[id].storageDealProvider = providerRet.provider; 
     }
@@ -207,4 +208,9 @@ contract DataTankDao {
         require(proposal.amount * 10 / 100 <= msg.value, "You must pay 10% of the proposal reward amount");
         proposal.rentedBy[msg.sender] = block.timestamp + 10000;
     }
+
+     function viewProposal(uint id) public view returns( bool,uint,bool, string memory){
+        return (proposals[id].phase1Approved,proposals[id].dealid,proposals[id].isdealverified,proposals[id].researchDataIPFS);
+    }
+    
 }
