@@ -156,14 +156,14 @@ const DetailProposal = () => {
                       setTimeout(async ()=>{
                         await handleall(fileCid,dealId)
                       },5000)
-                      /*console.log(lighthouse.uploadBuffer)
+                      console.log(lighthouse.uploadBuffer)
                       const uploadResponse = await lighthouse.uploadBuffer(
                         buffer,
                         "ab622721-68d5-4b84-92d4-d60422299381"
-                      );*/
+                      );
                       //console.log(uploadResponse)
-                      //setStatus("File processed successfully!");
-                      //setLoading(false);
+                      setStatus("File processed successfully!");
+                      setLoading(false);
                     };
                     fileReader.readAsArrayBuffer(event.target.files[0]);
                   };
