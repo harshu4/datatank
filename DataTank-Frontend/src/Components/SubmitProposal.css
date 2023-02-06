@@ -1,0 +1,7 @@
+.container {
+    max-width: 800px;
+}
+  
+.bg-gradient-to-r {
+    background-image: linear-gradient(to right, #6851ff, #ff77ab);
+}

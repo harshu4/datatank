@@ -229,6 +229,9 @@ contract DataTankDao {
         proposal.rentedBy[msg.sender] = block.timestamp + 10000;
     }
 
+     function viewVotes(uint id,address my) public view returns (bool,bool){
+        return (proposals[id].votes[my],proposals[id].votes2[my]);
+     }
      function viewProposal(uint id) public view returns( Proposalview memory){
          Proposalview memory  newProposal;
          newProposal.id = proposals[id].id;
