@@ -27,11 +27,31 @@ contract DataTankDao {
         mapping(address => uint256) rentedBy;
     }
     
+
+    struct Proposalview {
+        uint id;
+        uint amount;
+        address proposer;
+        string ipfsCID;
+        uint voteCount;
+        uint voteCount2;
+        bool phase1Approved;
+        bool phase2Approved;
+        string researchDataIPFS;
+        bool isdealverified;
+        uint64 storageDealProvider;
+        address payable renewelProvider;
+        uint storageDealExpiry;
+        uint storageDealBid;
+        uint dealid;
+    }
+
+
     // mapping to store all proposals
      mapping(uint => Proposal)  proposals ;
     
     // counter to keep track of the proposal id
-    uint proposalCounter = 0;
+    uint public proposalCounter = 0;
 
     address public owner;
     ERC20 public token;
@@ -129,7 +149,7 @@ contract DataTankDao {
     function verify(uint id,uint64 dealid) public{
         MarketTypes.GetDealDataCommitmentReturn memory commitmentRet = MarketAPI.getDealDataCommitment(MarketTypes.GetDealDataCommitmentParams({id: dealid}));
        string memory cidOfData = proposals[id].researchDataIPFS;
-    //  require(commitmentRet.data == bytes(cidOfData),"cid not same");
+     require(commitmentRet.data == bytes(cidOfData),"cid not same");
       MarketTypes.GetDealProviderReturn memory providerRet = MarketAPI.getDealProvider(MarketTypes.GetDealProviderParams({id: dealid}));
         proposals[id].dealid = dealid;
         proposals[id].researchDataIPFS = string(commitmentRet.data);
@@ -209,8 +229,28 @@ contract DataTankDao {
         proposal.rentedBy[msg.sender] = block.timestamp + 10000;
     }
 
-     function viewProposal(uint id) public view returns( bool,uint,bool, string memory){
-        return (proposals[id].phase1Approved,proposals[id].dealid,proposals[id].isdealverified,proposals[id].researchDataIPFS);
+     function viewProposal(uint id) public view returns( Proposalview memory){
+         Proposalview memory  newProposal;
+         newProposal.id = proposals[id].id;
+         newProposal.amount = proposals[id].amount;
+         newProposal.proposer = proposals[id].proposer;
+         newProposal.ipfsCID = proposals[id].ipfsCID;
+         newProposal.voteCount = proposals[id].voteCount;
+         newProposal.voteCount2 = proposals[id].voteCount2;
+         newProposal.phase1Approved = proposals[id].phase1Approved;
+         newProposal.phase2Approved = proposals[id].phase2Approved; 
+         newProposal.researchDataIPFS = proposals[id].researchDataIPFS;
+         newProposal.isdealverified = proposals[id].isdealverified;
+        newProposal.storageDealProvider = proposals[id].storageDealProvider;
+        newProposal.renewelProvider = proposals[id].renewelProvider;
+        newProposal.storageDealExpiry = proposals[id].storageDealExpiry;
+        newProposal.storageDealBid = proposals[id].storageDealBid;
+        newProposal.dealid = proposals[id].dealid;
+        return newProposal;
+
     }
+
+
+    
     
 }

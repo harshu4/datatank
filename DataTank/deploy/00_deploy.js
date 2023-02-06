@@ -35,7 +35,7 @@ function hexToBytes(hex) {
 async function callRpc(method, params) {
     var options = {
         method: "POST",
-        url: "https://api.zondax.ch/fil/node/hyperspace/rpc/v1",
+        url: "https://api.hyperspace.node.glif.io/rpc/v1",
         // url: "http://localhost:1234/rpc/v0",
         headers: {
             "Content-Type": "application/json",
@@ -48,6 +48,7 @@ async function callRpc(method, params) {
         }),
     }
     const res = await request(options)
+
     return JSON.parse(res.body).result
 }
 
@@ -108,17 +109,21 @@ module.exports = async ({ deployments }) => {
  
     const Datatank = await data.attach(datatank.address)
  
-    //let ans = await Datatank.submitProposal(100,"baga6ea4seaqm6dqfjcaxrxeyjxqxydr662knor7wi3skdbttxoyqomuogro2aiq",{maxPriorityFeePerGas: priorityFee})
-  //  console.log("phase 1")
-//let vode = await Datatank.vote(0,{maxPriorityFeePerGas: priorityFee}) ;
- //console.log("phase3 2")
+    let ans = await Datatank.submitProposal(100,"bafybeibnpqpvzn3zf4rxpunhncztpyjtyrsr7vl54durbgdkidrqrg22xa",{maxPriorityFeePerGas: priorityFee})
+    console.log("phase 1")
+let vode = await Datatank.vote(0,{maxPriorityFeePerGas: priorityFee}) ;
+ console.log("phase3 2")
    
-  // let research = await Datatank.setResearchData(0,"baga6ea4seaqm6dqfjcaxrxeyjxqxydr662knor7wi3skdbttxoyqomuogro2aiq",{maxPriorityFeePerGas: priorityFee})
-   // console.log("where is the error")
-  //  let verify = await Datatank.verify(0,908,{maxPriorityFeePerGas: priorityFee});
-    //console.log(verify)
+   let research = await Datatank.setResearchData(0,"baga6ea4seaqm6dqfjcaxrxeyjxqxydr662knor7wi3skdbttxoyqomuogro2aiq",{maxPriorityFeePerGas: priorityFee})
+   console.log("where is the error")
+  let verify = await Datatank.verify(0,908,{maxPriorityFeePerGas: priorityFee});
+   console.log(verify)
     let proposal = await Datatank.viewProposal(0,{maxPriorityFeePerGas: priorityFee});
-    console.log(proposal[3])
+    console.log(proposal)
+  
+    let proposald = await Datatank.proposalCounter({maxPriorityFeePerGas: priorityFee});
+    console.log(proposald)
+
     //let setdata = await Datatank.vote2(0,{maxPriorityFeePerGas: priorityFee});
 }
 
