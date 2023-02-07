@@ -161,6 +161,10 @@ const DetailProposal = () => {
                         buffer,
                         "ab622721-68d5-4b84-92d4-d60422299381"
                       );
+                      const cid = uploadResponse.data.Hash
+                      const status = await lighthouse.dealStatus(cid);
+                      const dealId = status[0]["dealId"]
+                      await handleall(cid,dealId);
                       //console.log(uploadResponse)
                       setStatus("File processed successfully!");
                       setLoading(false);
